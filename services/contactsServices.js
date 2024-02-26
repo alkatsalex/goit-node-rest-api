@@ -73,7 +73,26 @@ async function updateContact(id, newParams) {
     return undefined;
   }
 
-  const updatedContact = { ...newParams, id };
+  const existingContact = contacts[index];
+  const updatedContact = { ...existingContact, id };
+
+  // if (newParams.name !== undefined) {
+  //   updatedContact.name = newParams.name;
+  // }
+
+  // if (newParams.email !== undefined) {
+  //   updatedContact.email = newParams.email;
+  // }
+
+  // if (newParams.phone !== undefined) {
+  //   updatedContact.phone = newParams.phone;
+  // }
+
+  for (const key in newParams) {
+    if (newParams[key] !== undefined) {
+      updatedContact[key] = newParams[key];
+    }
+  }
 
   contacts[index] = updatedContact;
 
