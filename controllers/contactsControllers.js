@@ -1,3 +1,5 @@
+import Contact from "../models/contact.js";
+
 import contactsService from "../services/contactsServices.js";
 import {
   createContactSchema,
@@ -5,10 +7,17 @@ import {
 } from "../schemas/contactsSchemas.js";
 
 export const getAllContacts = async (req, res, next) => {
+  // try {
+  //   const data = await contactsService.listContacts();
+  //   console.log(typeof data);
+  //   res.send(data);
+  // } catch (error) {
+  //   next(error);
+  // }
   try {
-    const data = await contactsService.listContacts();
-    console.log(typeof data);
-    res.send(data);
+    const contacts = await Contact.findById("65df97634586325345192be3");
+    console.log(contacts);
+    res.send(contacts);
   } catch (error) {
     next(error);
   }
@@ -17,11 +26,22 @@ export const getAllContacts = async (req, res, next) => {
 export const getOneContact = async (req, res, next) => {
   const id = req.params.id;
 
+  // try {
+  //   const data = await contactsService.getContactById(id);
+  //   console.log(data);
+  //   if (typeof data === "undefined") {
+  //     res.status(404).json({ message: "Not found contact" });
+  //   }
+  //   res.send(data);
+  // } catch (error) {
+  //   next(error);
+  // }
+
   try {
-    const data = await contactsService.getContactById(id);
+    const data = await Contact.findById(id);
     console.log(data);
-    if (typeof data === "undefined") {
-      res.status(404).json({ message: "Not found contact" });
+    if (data === null) {
+      return res.status(404).json({ message: "Not found contact" });
     }
     res.send(data);
   } catch (error) {
