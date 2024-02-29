@@ -1,22 +1,14 @@
 import Contact from "../models/contact.js";
 
-import contactsService from "../services/contactsServices.js";
 import {
   createContactSchema,
   updateContactSchema,
 } from "../schemas/contactsSchemas.js";
 
 export const getAllContacts = async (req, res, next) => {
-  // try {
-  //   const data = await contactsService.listContacts();
-  //   console.log(typeof data);
-  //   res.send(data);
-  // } catch (error) {
-  //   next(error);
-  // }
   try {
-    const contacts = await Contact.findById("65df97634586325345192be3");
-    console.log(contacts);
+    const contacts = await Contact.find({});
+    console.log(Contact);
     res.send(contacts);
   } catch (error) {
     next(error);
@@ -25,17 +17,6 @@ export const getAllContacts = async (req, res, next) => {
 
 export const getOneContact = async (req, res, next) => {
   const id = req.params.id;
-
-  // try {
-  //   const data = await contactsService.getContactById(id);
-  //   console.log(data);
-  //   if (typeof data === "undefined") {
-  //     res.status(404).json({ message: "Not found contact" });
-  //   }
-  //   res.send(data);
-  // } catch (error) {
-  //   next(error);
-  // }
 
   try {
     const data = await Contact.findById(id);
@@ -52,8 +33,9 @@ export const getOneContact = async (req, res, next) => {
 export const deleteContact = async (req, res, next) => {
   const id = req.params.id;
   try {
-    const data = await contactsService.removeContact(id);
-    if (typeof data === "undefined") {
+    const data = await Contact.findByIdAndDelete(id);
+
+    if (data === null) {
       res.status(404).json({ message: "Not found contact" });
     }
     res.send(data);
@@ -72,8 +54,9 @@ export const createContact = async (req, res, next) => {
   }
 
   try {
-    const data = await contactsService.addContact(name, email, phone);
-    res.send(data);
+    const result = await Contact.create({ name, email, phone });
+
+    res.status(201).send(result);
   } catch (error) {
     next(error);
   }
@@ -89,7 +72,23 @@ export const updateContact = async (req, res, next) => {
   }
 
   try {
-    const data = await contactsService.updateContact(id, value);
+    const data = await Contact.findByIdAndUpdate(id, value);
+    res.send(data);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateStatusContact = async (req, res, next) => {
+  const id = req.params.id;
+  const { favorite } = req.body;
+
+  try {
+    const data = await Contact.findByIdAndUpdate(id, { favorite, _id: id });
+
+    if (data === null) {
+      return res.status(404).json({ message: "Not found contact" });
+    }
     res.send(data);
   } catch (error) {
     next(error);
