@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 import { usersRegisterSchema } from "../schemas/usersSchema.js";
+import { subscriptionSchema } from "../schemas/subscriptionUpdateSchema.js";
 
 export const registerUsers = async (req, res, next) => {
   const { email, password } = req.body;
@@ -81,7 +82,29 @@ export const loginUsers = async (req, res, next) => {
 
 export const logoutUser = async (req, res, next) => {
   try {
-    await User.findByIdAndUpdate(req.user.id, { token: null });
+    await User.findByIdAndUpdate(res.user.id, { token: null });
+
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateSubscription = async (req, res, next) => {
+  const { subscription } = req.body;
+  console.log(res.user.id);
+  const { value, error } = subscriptionSchema.validate({
+    subscription,
+  });
+  console.log(value.subscription);
+  if (typeof error !== "undefined") {
+    return res.status(400).json({ message: error.message });
+  }
+
+  try {
+    await User.findByIdAndUpdate(res.user.id, {
+      subscription: value.subscription,
+    });
 
     res.status(204).end();
   } catch (error) {
