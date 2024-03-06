@@ -7,8 +7,18 @@ import {
 
 export const getAllContacts = async (req, res, next) => {
   const owner = res.user.id;
+
+  const { favorite } = req.query;
+
   try {
+    if (favorite === "true") {
+      const favoriteContacts = await Contact.find({ owner, favorite });
+
+      return res.send(favoriteContacts);
+    }
+
     const contacts = await Contact.find({ owner });
+
     res.send(contacts);
   } catch (error) {
     next(error);
