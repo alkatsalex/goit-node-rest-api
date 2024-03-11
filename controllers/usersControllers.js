@@ -74,10 +74,16 @@ export const loginUsers = async (req, res, next) => {
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
-
+    const subscription = user.subscription;
     await User.findByIdAndUpdate(user._id, { token });
-
-    res.send({ token });
+    const resUser = {
+      token,
+      user: {
+        email,
+        subscription,
+      },
+    };
+    res.send(resUser);
   } catch (error) {
     next(error);
   }
