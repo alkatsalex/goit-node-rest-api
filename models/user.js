@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import gravatar from "gravatar";
 const UserSchema = new mongoose.Schema({
   password: {
     type: String,
@@ -17,6 +18,10 @@ const UserSchema = new mongoose.Schema({
   token: {
     type: String,
     default: null,
+  },
+  avatarURL: {
+    type: String,
+    default: gravatar.url(),
   },
 });
 

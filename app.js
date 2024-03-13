@@ -13,6 +13,7 @@ const app = express();
 app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());
+app.use(express.static("public"));
 
 app.use("/api/contacts", auth, contactsRouter);
 app.use("/api/users", usersRouter);
@@ -29,3 +30,5 @@ app.use((err, req, res, next) => {
 app.listen(3000, () => {
   console.log("Server is running. Use our API on port: 3000");
 });
+
+export default app;
