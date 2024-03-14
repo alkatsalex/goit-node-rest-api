@@ -23,6 +23,14 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: gravatar.url(),
   },
+  verify: {
+    type: Boolean,
+    default: false,
+  },
+  verificationToken: {
+    type: String,
+    required: [true, "Verify token is required"],
+  },
 });
 
 export default mongoose.model("User", UserSchema);
